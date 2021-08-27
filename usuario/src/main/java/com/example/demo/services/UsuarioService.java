@@ -3,6 +3,7 @@ package com.example.demo.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DTO.UsuarioDTO;
@@ -17,6 +18,9 @@ public class UsuarioService implements IUsuarioService {
 
 	@Autowired
 	UsuarioRepository usuarioRepo;
+
+	@Autowired
+	BCryptPasswordEncoder passEnconder;
 
 	UsuarioMapper convertidor = new UsuarioMapper();
 
@@ -36,6 +40,7 @@ public class UsuarioService implements IUsuarioService {
 	@Override
 	public String altaUsuario(UsuarioDTO c) {
 		Usuario aux = convertidor.usuarioDtoToUsuario(c);
+		aux.setContrasenia(passEnconder.encode(c.getContrasenia()));
 		usuarioRepo.save(aux);
 		return "Dado de alta correctamente";
 	}
